@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example response body from GET /token when a token has been saved. -->
+<token>
+  <bigtoken>example-token-value</bigtoken>
+</token>

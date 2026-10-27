@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Whiteboard token store</title>
+</head>
+<body>
+  <main>
+    <header>
+      <p>Whiteboard</p>
+      <h1>Token store</h1>
+      <p>Submit a token and view the latest value saved in the database.</p>
+      {{if .HasTokenCount}}<p>Total number of tokens entered in the whiteboard: <strong>{{.TokenCount}}</strong></p>{{end}}
+    </header>
+
+    <section aria-labelledby="submit-heading">
+      <h2 id="submit-heading">Submit a token</h2>
+      <form action="/ui/submit" method="post">
+        <label for="big-token">Token value</label>
+        <textarea
+          id="big-token"
+          name="bigtoken"
+          rows="4"
+          maxlength="1000000"
+          autocomplete="off"
+          placeholder="Enter a token"
+          required
+        ></textarea>
+        <p><button type="submit">Submit token</button></p>
+      </form>
+    </section>
+
+    <section aria-labelledby="saved-heading">
+      <h2 id="saved-heading">Latest saved token</h2>
+      {{if .Message}}<p role="status">{{.Message}}</p>{{end}}
+      {{if .HasToken}}
+      <pre>{{.Token}}</pre>
+      {{else}}
+      <p>No token has been saved yet.</p>
+      {{end}}
+    </section>
+  </main>
+</body>
+</html>

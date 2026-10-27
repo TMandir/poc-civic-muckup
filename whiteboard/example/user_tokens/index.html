@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>White Board Example</title>
+</head>
+<body>
+  <main>
+    <h1>White Board Example</h1>
+    <p>Each Token Key identifies a user. No login is required; this is dummy test stage.</p>
+
+    <section aria-labelledby="save-heading">
+      <h2 id="save-heading">Save a user's token</h2>
+      <form action="/submit" method="post">
+        <p>
+          <label for="frontend-token-key">Token Key (user identifier)</label><br>
+          <input
+            id="frontend-token-key"
+            name="frontendTokenKey"
+            autocomplete="off"
+            required
+            value="{{.FrontendTokenKey}}"
+          >
+        </p>
+        <p>
+          <label for="token">Token</label><br>
+          <textarea id="token" name="token" rows="4" required></textarea>
+        </p>
+        <p>
+          <label for="information">Token information</label><br>
+          <textarea id="information" name="information" rows="3" required></textarea>
+        </p>
+        <button type="submit">Save user token</button>
+      </form>
+      {{if .Message}}<p role="status">{{.Message}}</p>{{end}}
+    </section>
+
+    <section aria-labelledby="lookup-heading">
+      <h2 id="lookup-heading">Look up by User Token Key (Enter Your Key Here) </h2>
+      <form action="/" method="get">
+        <label for="lookup-key">Token Key (user identifier)</label>
+        <input id="lookup-key" name="frontendTokenKey" autocomplete="off" required>
+        <button type="submit">Look up</button>
+      </form>
+      {{if .Found}}
+      <h3>Token</h3>
+      <pre>{{.Token}}</pre>
+      <h3>Token information</h3>
+      <pre>{{.Information}}</pre>
+      {{else if not .Message}}
+      <p>Enter the user's Token Key to look up their record.</p>
+      {{end}}
+      <!-- <p>JSON endpoint: <code>GET /token?frontendTokenKey=your-user-identifier</code></p> -->
+    </section>
+
+    <section aria-labelledby="compare-heading">
+      <h2 id="compare-heading">Compare token values</h2>
+      <form action="/" method="get">
+        <input type="hidden" name="compare" value="1">
+        <p>
+          <label for="first-key">First token key</label><br>
+          <input id="first-key" name="firstKey" autocomplete="off" required value="{{.FirstKey}}">
+        </p>
+        <p>
+          <label for="second-key">Second token key</label><br>
+          <input id="second-key" name="secondKey" autocomplete="off" required value="{{.SecondKey}}">
+        </p>
+        <button type="submit">Compare values</button>
+      </form>
+      {{if .HasComparison}}
+      <h3>First record</h3>
+      <p>Key: <code>{{.Comparison.First.Key}}</code></p>
+      <p>Value:</p>
+      <pre>{{.Comparison.First.Value}}</pre>
+      <p>Value length: <strong>{{.Comparison.FirstValueLength}}</strong> characters</p>
+      <h3>Second record</h3>
+      <p>Key: <code>{{.Comparison.Second.Key}}</code></p>
+      <p>Value:</p>
+      <pre>{{.Comparison.Second.Value}}</pre>
+      <p>Value length: <strong>{{.Comparison.SecondValueLength}}</strong> characters</p>
+      <section aria-labelledby="discussion-result-heading">
+        <h3 id="discussion-result-heading">Discussion Result</h3>
+        <pre>{{.DiscussionResult}}</pre>
+      </section>
+      {{end}}
+    </section>
+  </main>
+</body>
+</html>

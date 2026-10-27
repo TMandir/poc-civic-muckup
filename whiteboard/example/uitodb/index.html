@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keyed token store example</title>
+</head>
+<body>
+  <main>
+    <h1>Keyed token store</h1>
+
+    <section aria-labelledby="save-heading">
+      <h2 id="save-heading">Save a token</h2>
+      <form action="/submit" method="post">
+        <p>
+          <label for="key">Key</label><br>
+          <input id="key" name="key" autocomplete="off" required value="{{.Key}}">
+        </p>
+        <p>
+          <label for="value">Token value</label><br>
+          <textarea id="value" name="value" rows="4" required></textarea>
+        </p>
+        <button type="submit">Save key and token</button>
+      </form>
+      {{if .Message}}<p role="status">{{.Message}}</p>{{end}}
+    </section>
+
+    <section aria-labelledby="lookup-heading">
+      <h2 id="lookup-heading">Token found by key</h2>
+      {{if .Value}}<p><code>{{.Key}}</code>: <pre>{{.Value}}</pre></p>{{else}}<p>Enter a saved key above to look up its token.</p>{{end}}
+      <p>JSON lookup: <code>GET /token?key=your-key</code></p>
+    </section>
+  </main>
+</body>
+</html>

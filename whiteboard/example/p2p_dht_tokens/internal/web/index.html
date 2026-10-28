@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sunya DHT P2P Token Example</title>
+</head>
+<body>
+  <main>
+    <h1>Sunya DHT P2P Token Example</h1>
+    <p>Each peer has a local database. Peers using the same DHT discovery tag synchronize all records.</p>
+
+    <section aria-labelledby="peer-heading">
+      <h2 id="peer-heading">This peer</h2>
+      <p>Peer ID: <code>{{.PeerID}}</code></p>
+      {{range .Addresses}}<p>Peer address: <code>{{.}}</code></p>{{end}}
+      {{if .ConnectedPeers}}
+      <p>Connected peers:</p>
+      <ul>{{range .ConnectedPeers}}<li><code>{{.}}</code></li>{{end}}</ul>
+      {{else}}
+      <p>No application peers connected yet. DHT discovery and relay reservations may take time.</p>
+      {{end}}
+    </section>
+
+    <section aria-labelledby="save-heading">
+      <h2 id="save-heading">Save a token</h2>
+      <form action="/submit" method="post">
+        <p><label for="key">Token key</label><br><input id="key" name="key" required value="{{.Key}}"></p>
+        <p><label for="token">Token</label><br><textarea id="token" name="token" rows="4" required></textarea></p>
+        <p><label for="information">Information</label><br><textarea id="information" name="information" rows="3" required></textarea></p>
+        <button type="submit">Save and synchronize</button>
+      </form>
+      {{if .Message}}<p role="status">{{.Message}}</p>{{end}}
+    </section>
+
+    <section aria-labelledby="lookup-heading">
+      <h2 id="lookup-heading">Look up local record</h2>
+      <form action="/" method="get">
+        <label for="lookup-key">Token key</label>
+        <input id="lookup-key" name="key" required>
+        <button type="submit">Look up</button>
+      </form>
+      {{if .Found}}
+      <h3>Token</h3><pre>{{.Token}}</pre>
+      <h3>Information</h3><pre>{{.Information}}</pre>
+      {{end}}
+    </section>
+
+    <section aria-labelledby="compare-heading">
+      <h2 id="compare-heading">Compare values in this peer's database</h2>
+      <form action="/" method="get">
+        <input type="hidden" name="compare" value="1">
+        <p><label for="first-key">First key</label><br><input id="first-key" name="firstKey" value="{{.FirstKey}}" required></p>
+        <p><label for="second-key">Second key</label><br><input id="second-key" name="secondKey" value="{{.SecondKey}}" required></p>
+        <button type="submit">Compare values</button>
+      </form>
+      {{if .HasComparison}}
+      <h3>First value ({{.Comparison.FirstValueLength}} characters)</h3><pre>{{.Comparison.First.Value}}</pre>
+      <h3>Second value ({{.Comparison.SecondValueLength}} characters)</h3><pre>{{.Comparison.Second.Value}}</pre>
+      <h3>Concatenated result</h3><pre>{{.Combined}}</pre>
+      {{end}}
+    </section>
+  </main>
+</body>
+</html>

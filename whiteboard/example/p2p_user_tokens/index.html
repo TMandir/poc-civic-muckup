@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sunya P2P Token Example</title>
+</head>
+<body>
+  <main>
+    <h1>Sunya P2P Token Example</h1>
+    <p>Each node stores records in its own LevelDB database. Updates replicate to connected peers.</p>
+
+    <section aria-labelledby="node-heading">
+      <h2 id="node-heading">This node</h2>
+      <p>Peer ID: <code>{{.PeerID}}</code></p>
+      {{range .PeerAddresses}}<p>Dial address: <code>{{.}}</code></p>{{end}}
+      {{if .ConnectedPeers}}
+      <p>Connected peers:</p>
+      <ul>{{range .ConnectedPeers}}<li><code>{{.}}</code></li>{{end}}</ul>
+      {{else}}
+      <p>No peers are connected. Records remain local until a peer connects.</p>
+      {{end}}
+    </section>
+
+    <section aria-labelledby="save-heading">
+      <h2 id="save-heading">Save a token</h2>
+      <form action="/submit" method="post">
+        <p>
+          <label for="frontend-token-key">Token key</label><br>
+          <input id="frontend-token-key" name="frontendTokenKey" autocomplete="off" required value="{{.FrontendTokenKey}}">
+        </p>
+        <p>
+          <label for="token">Token</label><br>
+          <textarea id="token" name="token" rows="4" required></textarea>
+        </p>
+        <p>
+          <label for="information">Token information</label><br>
+          <textarea id="information" name="information" rows="3" required></textarea>
+        </p>
+        <button type="submit">Save and replicate</button>
+      </form>
+      {{if .Message}}<p role="status">{{.Message}}</p>{{end}}
+    </section>
+
+    <section aria-labelledby="lookup-heading">
+      <h2 id="lookup-heading">Look up on this node</h2>
+      <form action="/" method="get">
+        <label for="lookup-key">Token key</label>
+        <input id="lookup-key" name="frontendTokenKey" autocomplete="off" required>
+        <button type="submit">Look up</button>
+      </form>
+      {{if .Found}}
+      <h3>Token</h3>
+      <pre>{{.Token}}</pre>
+      <h3>Token information</h3>
+      <pre>{{.Information}}</pre>
+      {{end}}
+    </section>
+
+    <section aria-labelledby="compare-heading">
+      <h2 id="compare-heading">Compare values in this node's database</h2>
+      <form action="/" method="get">
+        <input type="hidden" name="compare" value="1">
+        <p>
+          <label for="first-key">First token key</label><br>
+          <input id="first-key" name="firstKey" autocomplete="off" required value="{{.FirstKey}}">
+        </p>
+        <p>
+          <label for="second-key">Second token key</label><br>
+          <input id="second-key" name="secondKey" autocomplete="off" required value="{{.SecondKey}}">
+        </p>
+        <button type="submit">Compare local values</button>
+      </form>
+      {{if .HasComparison}}
+      <h3>First record</h3>
+      <p>Key: <code>{{.Comparison.First.Key}}</code></p>
+      <pre>{{.Comparison.First.Value}}</pre>
+      <p>Value length: <strong>{{.Comparison.FirstValueLength}}</strong> characters</p>
+      <h3>Second record</h3>
+      <p>Key: <code>{{.Comparison.Second.Key}}</code></p>
+      <pre>{{.Comparison.Second.Value}}</pre>
+      <p>Value length: <strong>{{.Comparison.SecondValueLength}}</strong> characters</p>
+      <h3>Discussion result</h3>
+      <pre>{{.DiscussionResult}}</pre>
+      {{end}}
+    </section>
+  </main>
+</body>
+</html>
